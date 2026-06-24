@@ -51,5 +51,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Project Fruit.sln"
+    "dotnet.defaultSolution": "PulpFriction.sln"
 }

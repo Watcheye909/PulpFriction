@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public Transform orientation;
     public GameObject level;
+    public ParticleSystem Speedlines;
 
     [Header("Movement Settings")]
     public bool UserControl;
@@ -134,7 +135,7 @@ public class PlayerMovement : MonoBehaviour
         //Launch the ball
         if(Input.GetKeyDown(launchKey) && canLaunch)
         {
-            RPMSpeed += chargeAmount;
+            RPMSpeed += chargeAmount/2;
             RPMSpeed += extraSpeed;
             launched = true;
             //rb.AddForce(transform.forward * RPMSpeed, ForceMode.Impulse);
