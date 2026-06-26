@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,17 +12,36 @@ public class GameMaster : MonoBehaviour
 
 
 
+    public int points;
+    public int newPoints;
 
+    [Header("Scene Related")]
+    public bool getPoints;
+
+
+    [Header("Distance Tracker")]
+    // Stores the original starting position
+    private Vector3 startPosition;
+    // Stores the live calculated distance
+    public float distanceFromStart;
+    public int roundedDistance;
+    public TextMeshProUGUI distanceText;
+
+
+    [Header("Player Related")]
+    public GameObject player;
     public PlayerMovement PM;
     
     
+    [Header("Charge Time")]
     //public bool canRev;
     public float revTime;
     public float currentTime;
     // Start is called before the first frame update
     void Awake()
     {
-        PM = GameObject.Find("Player").GetComponent<PlayerMovement>();
+        player = GameObject.Find("Player");
+        PM = player.GetComponent<PlayerMovement>();
         //canRev = true;
 
         if (instance == null)
@@ -30,6 +51,15 @@ public class GameMaster : MonoBehaviour
         }
         else
             Destroy(gameObject);
+
+
+        getPoints = false;
+    }
+
+    void Start()
+    {
+        // Record the starting point when the game begins
+        startPosition = player.transform.position;
     }
 
     // Update is called once per frame
@@ -52,24 +82,64 @@ public class GameMaster : MonoBehaviour
         }
 
 
+
+
+
+
+        roundedDistance = Mathf.RoundToInt(distanceFromStart);
+        newPoints = roundedDistance;
+
+
+
+
+
+        // Calculate the straight-line distance every frame
+        distanceFromStart = Vector3.Distance(startPosition, player.transform.position);
+        
+        if(distanceText != null)
+        distanceText.SetText(roundedDistance + "");
+
+
+
         if(PM.launched && !PM.canLaunch && PM.RPMSpeed <= 0 && PM.rb.velocity.magnitude <= 0.01)
         {
             LevelReset();
         }
+
+        /*
+        if(getPoints)
+            convertToPoints();
+        */
     }
 
 
 
     void PlayerSearch()
     {
+        player = GameObject.Find("Player");
         PM = GameObject.Find("Player").GetComponent<PlayerMovement>();
+
+        if(getPoints)
+            convertToPoints();
+
         Debug.Log("Search Complete");
     }
 
     void LevelReset()
     {
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        getPoints = true;
     }
+
+
+    void convertToPoints()
+    {
+        points += newPoints;
+        getPoints = false;
+    }
+
+
+
 
 
     void OnEnable()
@@ -88,6 +158,7 @@ public class GameMaster : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         PlayerSearch();
+
         Debug.Log($"Scene Loaded: {scene.name} (Build Index: {scene.buildIndex})");
         Debug.Log($"Load Mode: {mode}");
         
@@ -97,4 +168,7 @@ public class GameMaster : MonoBehaviour
             Debug.Log("This is the first scene in the build order.");
         }
     }
+
+
+
 }

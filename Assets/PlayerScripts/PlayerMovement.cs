@@ -9,8 +9,15 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody rb;
     public Transform orientation;
     public GameObject level;
-    public ParticleSystem Speedlines;
+    public CameraSettings cam;
 
+
+
+    public GameObject speedlines;
+    //public ParticleSystem Speedlines;
+    public ParticleSystem chargeClouds;
+
+    
     [Header("Movement Settings")]
     public bool UserControl;
     public bool RotationOn;
@@ -22,6 +29,15 @@ public class PlayerMovement : MonoBehaviour
 
     public float groundMulti;
     public float airMulti;
+    public float slowDownMulti;
+
+    [Header("Camera Settings")]
+    public int speedlineThreshold;
+
+    public float shakeAmt;
+    public float shakeLength;
+
+    public double camTilt;
 
     [Header("Level Settings")]
     public float tiltSpeed;
@@ -36,9 +52,10 @@ public class PlayerMovement : MonoBehaviour
     public int chargeAmount;
     public float RPMSpeed;
 
+    
     public float extraSpeed;
-
     public float turnSpeed;
+
 
     [Header("Checks")]
     public bool launched;
@@ -53,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        cam = GameObject.Find("Main Camera").GetComponent<CameraSettings>();
         level = GameObject.Find("LEVEL");
         
         
@@ -61,8 +79,13 @@ public class PlayerMovement : MonoBehaviour
         
         canRev = true;
         canLaunch = true;
+
+        chargeClouds.Stop();
+        speedlines.SetActive(false);
     }
 
+    
+    
     void MyInput()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -102,8 +125,13 @@ public class PlayerMovement : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0, targetY, 0);
             orientation.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
             */
-            Vector3 rotationSpeed = new Vector3(0 ,horizontalInput * turnSpeed, 0);
-            orientation.Rotate(rotationSpeed * Time.deltaTime);
+
+            //turnSpeed = Mathf.Clamp(turnSpeed, -60, 60);
+            if(orientation.rotation.y <= 60 && orientation.rotation.y >= -60)
+            {    
+                Vector3 rotationSpeed = new Vector3(0 ,horizontalInput * turnSpeed, 0);
+                orientation.Rotate(rotationSpeed * Time.deltaTime);
+            }
         }
         /*
         if(UserControl)
@@ -115,6 +143,9 @@ public class PlayerMovement : MonoBehaviour
         */
     }
 
+    
+    
+    
     // Update is called once per frame
     void Update()
     {
@@ -128,6 +159,9 @@ public class PlayerMovement : MonoBehaviour
        //Charge up
         if(Input.GetKeyDown(chargeKey) && canRev)
         {
+            
+            chargeClouds.Play();
+            
             chargeAmount++;
             charging = true;
         }
@@ -141,7 +175,14 @@ public class PlayerMovement : MonoBehaviour
             //rb.AddForce(transform.forward * RPMSpeed, ForceMode.Impulse);
         }
 
+        
 
+
+
+
+
+
+        SpeedEffects();
         MyInput();
 
         if(launched)
@@ -153,19 +194,20 @@ public class PlayerMovement : MonoBehaviour
         if(RPMSpeed > 0)
         {
             if(grounded)
-                RPMSpeed -= Time.deltaTime;
+                RPMSpeed -= Time.deltaTime*slowDownMulti;
             
             if(!grounded)
                 RPMSpeed -= Time.deltaTime/2;
-            
         }
+
+
     }
     void FixedUpdate()
     {
         if(launched)
         {
             Launch();
-            Invoke("SpeedCheck", 5f);
+            Invoke("SpeedCheck", 3f);
         }
 
     }
@@ -177,6 +219,27 @@ public class PlayerMovement : MonoBehaviour
             //RPMSpeed =  rb.velocity.z; (OLD VERSION)
             RPMSpeed /= 1.25f;
         }
+    }
+
+    void SpeedEffects()
+    {
+        //ParticleSystem CHECK
+        if(!canRev)
+        {
+            chargeClouds.Stop();
+        }
+
+
+
+        
+        if(rb.velocity.magnitude > speedlineThreshold)
+        {
+            speedlines.SetActive(true);
+        }
+        else
+            speedlines.SetActive(false);
+
+        
     }
 
     void OnCollisionEnter(Collision collision)
