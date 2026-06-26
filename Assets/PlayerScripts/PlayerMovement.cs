@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public bool UserControl;
     public bool RotationOn;
 
+    Vector3 pos;
     public float horizontalInput;
     public float verticalInput;
     public float playerDrag;
@@ -102,8 +104,22 @@ public class PlayerMovement : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0, targetY, 0);
             orientation.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
             */
+<<<<<<< Updated upstream
             Vector3 rotationSpeed = new Vector3(0 ,horizontalInput * turnSpeed, 0);
             orientation.Rotate(rotationSpeed * Time.deltaTime);
+=======
+
+            //turnSpeed = Mathf.Clamp(turnSpeed, -60, 60);
+            if ((orientation.rotation.y <= 60 && orientation.rotation.y >= -60))  
+             {    
+                 Vector3 rotationSpeed = new Vector3(0 ,horizontalInput * turnSpeed, 0);
+                 orientation.Rotate(rotationSpeed * Time.deltaTime);
+               
+                 
+
+             }
+            
+>>>>>>> Stashed changes
         }
         /*
         if(UserControl)
@@ -115,6 +131,11 @@ public class PlayerMovement : MonoBehaviour
         */
     }
 
+<<<<<<< Updated upstream
+=======
+    
+    
+>>>>>>> Stashed changes
     // Update is called once per frame
     void Update()
     {
