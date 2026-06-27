@@ -65,12 +65,12 @@ public class UpgradeManager : MonoBehaviour
 
     public void LaunchText()
     {
-        descriptionText.SetText("Cost: " + launchCost + "\n Increases the initial boost you get after charging your Dash\n" + "Current Boost Speed Stat: " + extraSpeedT);
+        descriptionText.SetText("Cost: " + launchCost + "\n Increases the initial boost you get after charging your Dash\n" + "Boost Stat: " + extraSpeedT);
     }
 
     public void TurningText()
     {
-        descriptionText.SetText("Cost: " + turnCost + "\n Improves how quickly the ball turns, helping with overall handling\n" + "Current Turn Stat: " + turnSpeedT);
+        descriptionText.SetText("Cost: " + turnCost + "\n Improves how quickly the ball turns, helping with overall handling\n" + "Turn Stat: " + turnSpeedT);
     }
 
     public void ClearText()
