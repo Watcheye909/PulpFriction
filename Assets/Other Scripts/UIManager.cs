@@ -52,7 +52,7 @@ public class UIManager : MonoBehaviour
             Time.timeScale = 0f; // Pause the game
             Cursor.lockState = CursorLockMode.None; // Unlock the cursor
             Cursor.visible = true; // Show the cursor
-            cam.enabled = false; // Disable the camera movement
+            //cam.enabled = false; // Disable the camera movement
         }
     }
 
@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 1f; // Resume the game
         Cursor.lockState = CursorLockMode.Locked; // Lock the cursor
         Cursor.visible = false; // Hide the cursor
-        cam.enabled = true; // Enable the camera movement
+        //cam.enabled = true; // Enable the camera movement
     } 
 
 

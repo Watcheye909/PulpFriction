@@ -17,6 +17,7 @@ public class GameMaster : MonoBehaviour
 
     [Header("Scene Related")]
     public bool getPoints;
+    public UpgradeManager UM;
 
 
     [Header("Distance Tracker")]
@@ -31,6 +32,7 @@ public class GameMaster : MonoBehaviour
     [Header("Player Related")]
     public GameObject player;
     public PlayerMovement PM;
+    public TextMeshProUGUI pointText;
     
     
     [Header("Charge Time")]
@@ -42,6 +44,7 @@ public class GameMaster : MonoBehaviour
     {
         player = GameObject.Find("Player");
         PM = player.GetComponent<PlayerMovement>();
+        UM = GetComponent<UpgradeManager>();
         //canRev = true;
 
         if (instance == null)
@@ -85,6 +88,19 @@ public class GameMaster : MonoBehaviour
 
 
 
+        //----------STAT STUFFFF----------
+        
+        PM.extraSpeed = UM.extraSpeedT;
+        PM.turnSpeed = UM.turnSpeedT;
+
+
+
+
+
+
+
+
+
 
         roundedDistance = Mathf.RoundToInt(distanceFromStart);
         newPoints = roundedDistance;
@@ -99,6 +115,9 @@ public class GameMaster : MonoBehaviour
         if(distanceText != null)
         distanceText.SetText(roundedDistance + "");
 
+        if(pointText != null)
+        pointText.SetText("Points: " + points);
+
 
 
         if(PM.launched && !PM.canLaunch && PM.RPMSpeed <= 0 && PM.rb.velocity.magnitude <= 0.01)
@@ -111,6 +130,29 @@ public class GameMaster : MonoBehaviour
             convertToPoints();
         */
     }
+
+
+
+
+
+
+
+
+    public void LaunchUpgrade()
+    {
+        PM.extraSpeed += 5;
+    }
+    public void TurningUpgrade()
+    {
+        
+    }
+
+
+
+
+
+
+
 
 
 
@@ -158,7 +200,7 @@ public class GameMaster : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         PlayerSearch();
-
+        UM.UpgradeSearch();
         Debug.Log($"Scene Loaded: {scene.name} (Build Index: {scene.buildIndex})");
         Debug.Log($"Load Mode: {mode}");
         
