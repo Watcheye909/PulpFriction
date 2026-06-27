@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour
@@ -7,6 +8,8 @@ public class UpgradeManager : MonoBehaviour
     public GameObject player;
     public PlayerMovement PM;
     public GameMaster GM;
+
+    public TextMeshProUGUI descriptionText;
     
     [Header("Upgrade Cost")]
     public int launchCost;
@@ -59,6 +62,22 @@ public class UpgradeManager : MonoBehaviour
         else
             Debug.Log("You A Brokey");
     }
+
+    public void LaunchText()
+    {
+        descriptionText.SetText("Cost: " + launchCost + "\n Increases the initial boost you get after charging your Dash\n" + "Current Boost Speed Stat: " + extraSpeedT);
+    }
+
+    public void TurningText()
+    {
+        descriptionText.SetText("Cost: " + turnCost + "\n Improves how quickly the ball turns, helping with overall handling\n" + "Current Turn Stat: " + turnSpeedT);
+    }
+
+    public void ClearText()
+    {
+        descriptionText.SetText("Select An Upgrade!");
+    }
+
     public void TurningUpgrade()
     {
         if(GM.points >= turnCost)
